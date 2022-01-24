@@ -1,22 +1,17 @@
-def call(String registryCred = 'a', String registryin = 'a', String docTag = 'a', String contName = 'a', String grepo = 'a', String gbranch = 'a', String gitcred = 'a') {
+def call(String registryCred = 'a', String registryin = 'a', String docTag = 'a', String grepo = 'a', String gbranch = 'a', String gitcred = 'a') {
 
 pipeline {
 environment { 
 		registryCredential = "${registryCred}"
 		registry = "$registryin" 	
 		dockerTag = "${docTag}_$BUILD_NUMBER"
-		containerName = "${contName}"
 		gitRepo = "${grepo}"
 		gitBranch = "${gbranch}"
 		gitCredId = "${gitcred}"
 	}
 		
-	agent { label 'docker' }
+	agent { label 'k8s' }
 	
-	triggers {
-		pollSCM '* * * * *'
-	}
-
 	stages {
 		stage("POLL SCM"){
 			steps {
@@ -44,11 +39,7 @@ environment {
 					
 		stage('DEPLOY IMAGE') {
 			steps {
-				script { 
-					 docker.withRegistry( '', registryCredential ) { 
-						 dockerImage.run('-it --name "$containerName-$dockerTag"') 
-					}
-				} 
+				sh 'kubectl set image deployment/webapp-deployment nodejs="$registry:$dockerTag" --record'
 			}
 		}
 	}
