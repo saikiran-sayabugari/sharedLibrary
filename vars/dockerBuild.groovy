@@ -4,7 +4,7 @@ pipeline {
 environment { 
 		registryCredential = "${registryCred}"
 		registry = "$registryin" 	
-	        dockerTag = "${BUILD_NUMBER}"
+	        dockerTag = "1"
 		gitRepo = "${grepo}"
 		gitBranch = "${gbranch}"
 		gitCredId = "${gitcred}"
@@ -22,7 +22,7 @@ environment {
 		stage('BUILD IMAGE') { 
 			 steps { 
 				 script { 
-					 dockerImage = docker.build('"$registry:$BUILD_NUMBER"') 
+					 dockerImage = docker.build('"$registry:1"') 
 				 }
 			} 
 		}
