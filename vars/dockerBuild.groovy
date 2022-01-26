@@ -10,7 +10,7 @@ environment {
 		gitCredId = "${gitcred}"
 	}
 		
-	agent { none }
+	agent none
 	
 	stages {
 		stage("POLL SCM"){
